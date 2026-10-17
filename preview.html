@@ -1,0 +1,649 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scent Symphony — Лаборатория ароматов</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+  --bg: #faf6f2;
+  --ink: #332b3a;
+  --muted: #897e8e;
+  --pink: #eab9cb;
+  --purple: #c8b9e9;
+  --green: #c4d8c5;
+  --gold: #dfc38d;
+  --white: #fffdfb;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Manrope, sans-serif;
+}
+button, input { font: inherit; }
+button { cursor: pointer; }
+header {
+  padding: 22px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e9dfdf;
+  background: #fffaf7;
+}
+.logo {
+  font-family: "Playfair Display", serif;
+  font-size: 24px;
+}
+.logo span { color: #b58ba8; }
+nav { display: flex; gap: 10px; }
+nav button {
+  background: none;
+  border: 0;
+  padding: 10px 14px;
+  color: var(--muted);
+  border-radius: 20px;
+}
+nav button.active, nav button:hover {
+  color: var(--ink);
+  background: #f0e5ef;
+}
+main { max-width: 1160px; margin: auto; padding: 35px 22px 70px; }
+.hero {
+  border-radius: 28px;
+  padding: 40px;
+  background: linear-gradient(115deg,#f3dfe5,#e8e1f4 58%,#e4eadc);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #826b8d;
+}
+h1,h2,h3,p { margin-top: 0; }
+h1 {
+  font: 600 clamp(34px,5vw,53px)/1.1 "Playfair Display",serif;
+  max-width: 570px;
+  margin: 15px 0;
+}
+.hero p { color: #716679; line-height: 1.8; max-width: 510px; }
+.hero-art { font-size: 100px; filter: drop-shadow(0 12px 18px #b79db755); }
+.section-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 15px;
+  margin: 35px 0 18px;
+}
+h2 { font: 600 27px "Playfair Display",serif; margin-bottom: 7px; }
+.sub { color: var(--muted); font-size: 13px; }
+.workspace {
+  display: grid;
+  grid-template-columns: minmax(0,1.5fr) minmax(270px,0.85fr);
+  gap: 22px;
+  align-items: start;
+}
+.panel {
+  background: var(--white);
+  border: 1px solid #eee4e5;
+  border-radius: 23px;
+  padding: 23px;
+}
+.tabs { display:flex; gap:8px; margin-bottom:18px; flex-wrap:wrap; }
+.tab {
+  border:1px solid #e8dfe8;
+  background:white;
+  padding:10px 13px;
+  border-radius:12px;
+  color:#817488;
+  font-size:12px;
+}
+.tab.active { background:#eee6f6; border-color:#d7c5e6; color:#634b79; }
+.note-grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+}
+.note {
+  border:1px solid #eee5e8;
+  background:#fffdfc;
+  border-radius:15px;
+  padding:14px 8px;
+  text-align:center;
+  transition:.18s;
+  color:var(--ink);
+  min-width:0;
+}
+.note:hover { transform:translateY(-2px); border-color:#c8add1; }
+.note.selected {
+  background:#f2eaf8;
+  border:2px solid #b99acb;
+  padding:13px 7px;
+}
+.note .emoji { font-size:27px; display:block; margin-bottom:7px; }
+.note strong { font-size:12px; display:block; }
+.note small { display:block; font-size:10px; color:var(--muted); margin-top:4px; }
+.note .check { color:#906ba4; font-size:11px; margin-top:5px; display:block; }
+.bottle-area {
+  background:linear-gradient(160deg,#f6e7ee,#eee8f8 65%,#e4eadf);
+  border-radius:19px;
+  text-align:center;
+  padding:24px 15px;
+  overflow:hidden;
+}
+.bottle {
+  font-size:93px;
+  line-height:1.3;
+  filter:drop-shadow(0 10px 10px #b59bb255);
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float { 50% { transform:translateY(-5px) rotate(2deg); } }
+.perfume-name {
+  font:600 25px "Playfair Display",serif;
+  margin:12px 0 5px;
+  overflow-wrap:anywhere;
+}
+.pill {
+  display:inline-block;
+  background:#ffffffa8;
+  padding:6px 11px;
+  border-radius:30px;
+  font-size:10px;
+  color:#776782;
+}
+.selected-notes {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin:18px 0;
+  min-height:29px;
+}
+.chip {
+  background:#f3edf3;
+  border-radius:20px;
+  padding:7px 10px;
+  font-size:11px;
+}
+.empty { color:#aa9faa; font-size:12px; }
+.field-label { display:block; font-size:12px; font-weight:700; margin:15px 0 8px; }
+input {
+  width:100%;
+  border:1px solid #e9dfe7;
+  border-radius:12px;
+  padding:12px;
+  background:#fffdfb;
+  color:var(--ink);
+  outline:none;
+}
+input:focus { border-color:#b99acb; }
+.primary,.secondary {
+  border:0;
+  border-radius:13px;
+  padding:13px 15px;
+  font-weight:700;
+  font-size:12px;
+  transition:.2s;
+}
+.primary {
+  background:#5c4a69;
+  color:white;
+  width:100%;
+}
+.primary:hover { background:#776084; transform:translateY(-1px); }
+.secondary { background:#f1e9f2; color:#685374; }
+.secondary:hover { background:#e7d9eb; }
+.hint { font-size:11px; color:var(--muted); line-height:1.7; margin:12px 0 0; }
+.result {
+  margin-top:15px;
+  padding:14px;
+  border-radius:14px;
+  background:#f6f1f6;
+  font-size:12px;
+  line-height:1.8;
+  display:none;
+}
+.result.show { display:block; }
+.collection {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:15px;
+}
+.perfume-card {
+  background:#fffdfb;
+  border:1px solid #eee4e5;
+  padding:18px;
+  border-radius:19px;
+  min-width:0;
+}
+.mini-bottle { font-size:43px; }
+.perfume-card h3 {
+  font:600 19px "Playfair Display",serif;
+  margin:9px 0;
+  overflow-wrap:anywhere;
+}
+.perfume-card p { font-size:11px; line-height:1.7; color:var(--muted); }
+.perfume-card button { margin-top:8px; }
+footer { text-align:center; color:#a195a2; font-size:11px; padding:25px; }
+.hidden { display:none !important; }
+.toast {
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#51415c;
+  color:white;
+  border-radius:30px;
+  padding:13px 22px;
+  font-size:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:.25s;
+  z-index:10;
+  text-align:center;
+  width:max-content;
+  max-width:90%;
+}
+.toast.show { opacity:1; }
+@media(max-width:750px) {
+  header { padding:16px 5%; flex-wrap:wrap; gap:12px; }
+  nav { width:100%; justify-content:space-between; }
+  nav button { padding:8px; font-size:12px; }
+  main { padding:22px 14px 45px; }
+  .hero { padding:27px 23px; }
+  .hero-art { font-size:60px; }
+  .workspace { grid-template-columns:1fr; }
+  .note-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+  .collection { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media(max-width:390px) {
+  .hero-art { display:none; }
+  .panel { padding:15px; }
+  .note strong { font-size:10px; }
+  .note .emoji { font-size:23px; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">scent <span>♪</span> symphony</div>
+  <nav>
+    <button class="active" data-page="lab">Лаборатория</button>
+    <button data-page="discover">Найти духи</button>
+    <button data-page="collection">Коллекция <span id="count">0</span></button>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Your personal fragrance studio</div>
+      <h1>У каждого аромата своя мелодия.</h1>
+      <p>Выбирай ноты, смешивай настроение и создавай духи, которых ещё не существует. Твоя фантазия — главный ингредиент.</p>
+    </div>
+    <div class="hero-art">🪻</div>
+  </section>
+
+  <section id="labPage">
+    <div class="section-title">
+      <div>
+        <h2>Создай свой аромат</h2>
+        <div class="sub">Каждая нота — новый звук твоей композиции.</div>
+      </div>
+    </div>
+
+    <div class="workspace">
+      <div class="panel">
+        <div class="tabs" id="layerTabs">
+          <button class="tab active" data-layer="top">☀️ Верхние</button>
+          <button class="tab" data-layer="heart">🌷 Сердце</button>
+          <button class="tab" data-layer="base">🌙 Базовые</button>
+        </div>
+        <div id="layerDescription" class="sub" style="margin-bottom:15px">
+          Первое впечатление: свежие и искристые ноты.
+        </div>
+        <div class="note-grid" id="noteGrid"></div>
+        <p class="hint">Выбирай до 2 нот каждого слоя. Нажми на выбранную ноту ещё раз, чтобы убрать её.</p>
+      </div>
+
+      <aside class="panel">
+        <div class="bottle-area">
+          <div class="bottle" id="bottle">🧴</div>
+          <div class="perfume-name" id="previewName">Твоя мелодия</div>
+          <span class="pill" id="mood">Ожидает вдохновения</span>
+        </div>
+        <div class="selected-notes" id="selectedNotes">
+          <span class="empty">Твои ноты появятся здесь...</span>
+        </div>
+        <label class="field-label" for="perfumeName">Название твоих духов</label>
+        <input id="perfumeName" maxlength="45" placeholder="Например, Лунный сад">
+        <label class="field-label" for="creator">Имя парфюмера (необязательно)</label>
+        <input id="creator" maxlength="35" placeholder="Твой творческий псевдоним">
+        <div style="height:14px"></div>
+        <button class="primary" id="createBtn">✧ Создать и сохранить</button>
+        <button class="secondary" id="randomBtn" style="width:100%;margin-top:9px">⟳ Случайное вдохновение</button>
+        <p class="hint">Комбинации и описания придуманы для игры. Это виртуальная парфюмерная лаборатория!</p>
+      </aside>
+    </div>
+  </section>
+
+  <section id="discoverPage" class="hidden">
+    <div class="section-title">
+      <div>
+        <h2>Архив ароматов</h2>
+        <div class="sub">Найди готовые духи по любимым нотам.</div>
+      </div>
+    </div>
+    <div class="panel">
+      <label class="field-label" for="searchNote">Какие ноты тебе нравятся?</label>
+      <input id="searchNote" placeholder="Например, ваниль, роза, бергамот...">
+      <p class="hint">Введи одну или несколько нот через запятую. Можно также искать по названию.</p>
+      <div style="height:14px"></div>
+      <button class="primary" id="searchBtn">♪ Подобрать ароматы</button>
+      <div id="searchResults" class="collection" style="margin-top:18px"></div>
+    </div>
+  </section>
+
+  <section id="collectionPage" class="hidden">
+    <div class="section-title">
+      <div>
+        <h2>Твоя коллекция</h2>
+        <div class="sub">Все ароматы, созданные тобой.</div>
+      </div>
+    </div>
+    <div id="collectionGrid" class="collection"></div>
+  </section>
+</main>
+
+<footer>Scent Symphony · Смешивай ноты. Сочиняй ароматы. Будь собой. ♡</footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const notes = [
+  {id:'bergamot',name:'Бергамот',emoji:'🍋',group:'top',type:'Цитрусовый',desc:'искристый и свежий'},
+  {id:'lemon',name:'Лимон',emoji:'🍋‍🟩',group:'top',type:'Цитрусовый',desc:'яркий и бодрящий'},
+  {id:'pear',name:'Груша',emoji:'🍐',group:'top',type:'Фруктовый',desc:'сочный и нежный'},
+  {id:'mint',name:'Мята',emoji:'🌿',group:'top',type:'Зелёный',desc:'прохладный и чистый'},
+  {id:'orange',name:'Апельсин',emoji:'🍊',group:'top',type:'Цитрусовый',desc:'солнечный и игривый'},
+  {id:'apple',name:'Яблоко',emoji:'🍏',group:'top',type:'Фруктовый',desc:'хрустящий и свежий'},
+
+  {id:'rose',name:'Роза',emoji:'🌹',group:'heart',type:'Цветочный',desc:'романтичный и бархатный'},
+  {id:'jasmine',name:'Жасмин',emoji:'🌼',group:'heart',type:'Цветочный',desc:'воздушный и чувственный'},
+  {id:'lavender',name:'Лаванда',emoji:'🪻',group:'heart',type:'Травяной',desc:'спокойный и мечтательный'},
+  {id:'peony',name:'Пион',emoji:'🌸',group:'heart',type:'Цветочный',desc:'пудровый и нежный'},
+  {id:'cherry',name:'Вишня',emoji:'🍒',group:'heart',type:'Фруктовый',desc:'сладкий и загадочный'},
+  {id:'iris',name:'Ирис',emoji:'💜',group:'heart',type:'Цветочный',desc:'элегантный и мягкий'},
+
+  {id:'vanilla',name:'Ваниль',emoji:'🍦',group:'base',type:'Гурманский',desc:'тёплый и уютный'},
+  {id:'sandalwood',name:'Сандал',emoji:'🪵',group:'base',type:'Древесный',desc:'кремовый и глубокий'},
+  {id:'musk',name:'Мускус',emoji:'☁️',group:'base',type:'Мягкий',desc:'чистый и обволакивающий'},
+  {id:'amber',name:'Амбра',emoji:'🧡',group:'base',type:'Тёплый',desc:'золотистый и смолистый'},
+  {id:'cedar',name:'Кедр',emoji:'🌲',group:'base',type:'Древесный',desc:'сухой и благородный'},
+  {id:'chocolate',name:'Какао',emoji:'🍫',group:'base',type:'Гурманский',desc:'бархатный и сладкий'}
+];
+
+const layers = {
+  top:'Первое впечатление: свежие и искристые ноты.',
+  heart:'Сердце аромата: цветы, фрукты и эмоции.',
+  base:'Шлейф аромата: тёплые, глубокие и уютные ноты.'
+};
+
+const recipes = [
+  {name:'Розовый рассвет',notes:['bergamot','rose','vanilla'],emoji:'🌷',desc:'Нежный цветочный аромат с мягким ванильным теплом.'},
+  {name:'Секрет сада',notes:['pear','jasmine','musk'],emoji:'🌿',desc:'Воздушный, зелёный и деликатно сладкий.'},
+  {name:'Лавандовая мечта',notes:['lemon','lavender','sandalwood'],emoji:'🪻',desc:'Свежесть цитрусов встречается со спокойным деревом.'},
+  {name:'Вишнёвая ночь',notes:['orange','cherry','amber'],emoji:'🌙',desc:'Сочная вишня и тёплая золотистая глубина.'},
+  {name:'Облачный десерт',notes:['apple','iris','vanilla'],emoji:'🍨',desc:'Мягкий, сливочный, с фруктовым началом.'},
+  {name:'Тихий лес',notes:['mint','peony','cedar'],emoji:'🌲',desc:'Зелёная свежесть и элегантная древесная база.'},
+  {name:'Солнечный день',notes:['lemon','jasmine','musk'],emoji:'☀️',desc:'Светлый, чистый и сияющий аромат.'},
+  {name:'Бархатный вечер',notes:['bergamot','iris','sandalwood'],emoji:'💜',desc:'Утончённый древесно-пудровый характер.'},
+  {name:'Какао и розы',notes:['orange','rose','chocolate'],emoji:'🍫',desc:'Сладкий, цветочный и уютный аромат.'}
+];
+
+let selected = {top:[],heart:[],base:[]};
+let currentLayer = 'top';
+let collection = loadCollection();
+
+function loadCollection() {
+  try {
+    return JSON.parse(localStorage.getItem('scentSymphonyCollection') || '[]');
+  } catch { return []; }
+}
+function saveCollection() {
+  try {
+    localStorage.setItem('scentSymphonyCollection',JSON.stringify(collection));
+  } catch { showToast('Не удалось сохранить. Проверь настройки браузера.'); }
+}
+function allSelected() {
+  return [...selected.top,...selected.heart,...selected.base];
+}
+function getNote(id) {
+  return notes.find(n=>n.id===id);
+}
+function renderNotes() {
+  document.getElementById('layerDescription').textContent=layers[currentLayer];
+  document.querySelectorAll('[data-layer]').forEach(b=>
+    b.classList.toggle('active',b.dataset.layer===currentLayer)
+  );
+  const grid=document.getElementById('noteGrid');
+  grid.innerHTML='';
+  notes.filter(n=>n.group===currentLayer).forEach(n=>{
+    const isSelected=selected[currentLayer].includes(n.id);
+    const btn=document.createElement('button');
+    btn.className='note'+(isSelected?' selected':'');
+    btn.innerHTML=`<span class="emoji">${n.emoji}</span>
+      <strong>${n.name}</strong><small>${n.type}</small>
+      <span class="check">${isSelected?'✓ Выбрано':'＋ Добавить'}</span>`;
+    btn.addEventListener('click',()=>toggleNote(n.id));
+    grid.appendChild(btn);
+  });
+}
+function toggleNote(id) {
+  const arr=selected[currentLayer];
+  const i=arr.indexOf(id);
+  if(i>=0) arr.splice(i,1);
+  else if(arr.length>=2) {
+    showToast('В каждом слое можно выбрать не больше двух нот.');
+    return;
+  } else arr.push(id);
+  updatePreview();
+}
+function updatePreview() {
+  renderNotes();
+  const ids=allSelected();
+  const chips=document.getElementById('selectedNotes');
+  chips.innerHTML='';
+  if(!ids.length) {
+    chips.innerHTML='<span class="empty">Твои ноты появятся здесь...</span>';
+  } else ids.forEach(id=>{
+    const n=getNote(id);
+    const chip=document.createElement('span');
+    chip.className='chip';
+    chip.textContent=n.emoji+' '+n.name;
+    chips.appendChild(chip);
+  });
+  const name=document.getElementById('perfumeName').value.trim()||'Твоя мелодия';
+  document.getElementById('previewName').textContent=name;
+  const bottleEmojis=['🧴','🪷','💎','🦢','🌙','🪻'];
+  document.getElementById('bottle').textContent=
+    bottleEmojis[ids.length% bottleEmojis.length];
+  document.getElementById('mood').textContent=
+    ids.length===0?'Ожидает вдохновения':
+    ids.length<3?'Начало композиции':
+    ids.length<5?'Аромат обретает характер':'Сложная композиция';
+}
+document.querySelectorAll('[data-layer]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    currentLayer=btn.dataset.layer;
+    renderNotes();
+  });
+});
+document.getElementById('perfumeName').addEventListener('input',updatePreview);
+
+function describe(ids) {
+  if(!ids.length) return 'Пока это чистый лист. Добавь ноты, чтобы раскрыть характер аромата.';
+  const chosen=ids.map(getNote);
+  const families=[...new Set(chosen.map(n=>n.type.toLowerCase()))];
+  return `В композиции звучат ${chosen.map(n=>n.name.toLowerCase()).join(', ')}. 
+  Характер: ${families.join(', ')}. 
+  ${chosen.map(n=>n.desc).join('; ')}.`;
+}
+function savePerfume(ids,name,creator,emoji,desc) {
+  if(!ids.length) {
+    showToast('Сначала выбери хотя бы одну ноту!');
+    return;
+  }
+  const perfume={
+    id:Date.now()+Math.random(),
+    name:name||'Безымянная мелодия',
+    creator:creator||'Анонимный парфюмер',
+    notes:ids,
+    emoji:emoji||'🧴',
+    desc:desc||describe(ids),
+    date:new Date().toLocaleDateString('ru-RU')
+  };
+  collection.unshift(perfume);
+  saveCollection();
+  renderCollection();
+  showToast('✧ Твои духи добавлены в коллекцию!');
+}
+document.getElementById('createBtn').addEventListener('click',()=>{
+  const ids=allSelected();
+  savePerfume(ids,document.getElementById('perfumeName').value.trim(),
+    document.getElementById('creator').value.trim(),
+    document.getElementById('bottle').textContent,describe(ids));
+});
+document.getElementById('randomBtn').addEventListener('click',()=>{
+  selected={top:[],heart:[],base:[]};
+  ['top','heart','base'].forEach(layer=>{
+    const pool=notes.filter(n=>n.group===layer);
+    while(selected[layer].length<2) {
+      const id=pool[Math.floor(Math.random()*pool.length)].id;
+      if(!selected[layer].includes(id)) selected[layer].push(id);
+    }
+  });
+  const names=['Лунный сад','Шёпот облаков','Сладкий туман','Сон феи',
+    'Секрет звёзд','Персиковый рассвет','Маленькое чудо'];
+  document.getElementById('perfumeName').value=
+    names[Math.floor(Math.random()*names.length)];
+  updatePreview();
+  showToast('✨ Новое сочетание готово!');
+});
+
+function cardMarkup(p,index) {
+  const card=document.createElement('article');
+  card.className='perfume-card';
+  const noteNames=p.notes.map(id=>getNote(id)?.name||id).join(' · ');
+  card.innerHTML=`<div class="mini-bottle">${p.emoji||'🧴'}</div>
+    <h3></h3><span class="pill">Авторский аромат</span>
+    <p class="note-list"></p><p class="desc"></p>
+    <p class="author"></p>`;
+  card.querySelector('h3').textContent=p.name;
+  card.querySelector('.note-list').textContent=noteNames;
+  card.querySelector('.desc').textContent=p.desc||'Уникальная композиция.';
+  card.querySelector('.author').textContent='Автор: '+(p.creator||'Неизвестен');
+  return card;
+}
+function renderCollection() {
+  document.getElementById('count').textContent=collection.length;
+  const grid=document.getElementById('collectionGrid');
+  grid.innerHTML='';
+  if(!collection.length) {
+    grid.innerHTML='<p class="empty">Коллекция пока пуста. Создай свой первый аромат в лаборатории!</p>';
+    return;
+  }
+  collection.forEach((p,i)=>{
+    const card=cardMarkup(p,i);
+    const remove=document.createElement('button');
+    remove.className='secondary';
+    remove.textContent='Удалить';
+    remove.addEventListener('click',()=>{
+      collection=collection.filter(x=>x.id!==p.id);
+      saveCollection();
+      renderCollection();
+      showToast('Аромат удалён из коллекции.');
+    });
+    card.appendChild(remove);
+    grid.appendChild(card);
+  });
+}
+function findRecipes(query) {
+  const terms=query.toLowerCase().split(',').map(s=>s.trim()).filter(Boolean);
+  if(!terms.length) return recipes;
+  return recipes.map(r=>{
+    const names=r.notes.map(id=>getNote(id).name.toLowerCase());
+    const score=terms.reduce((total,t)=>{
+      const exact=names.some(n=>n===t);
+      const partial=names.some(n=>n.includes(t)||t.includes(n));
+      return total+(exact?2:partial?1:0);
+    },0);
+    const text=(r.name+' '+r.desc).toLowerCase();
+    return {...r,score:score+(terms.some(t=>text.includes(t))?1:0)};
+  }).filter(r=>r.score>0).sort((a,b)=>b.score-a.score);
+}
+document.getElementById('searchBtn').addEventListener('click',()=>{
+  const query=document.getElementById('searchNote').value;
+  const results=findRecipes(query);
+  const grid=document.getElementById('searchResults');
+  grid.innerHTML='';
+  if(!results.length) {
+    grid.innerHTML='<p class="empty">Точного совпадения нет. Попробуй другие ноты или создай собственный аромат!</p>';
+    return;
+  }
+  results.forEach(r=>{
+    const card=cardMarkup({...r,creator:'Архив Scent Symphony'},0);
+    const btn=document.createElement('button');
+    btn.className='secondary';
+    btn.textContent='Создать похожий';
+    btn.addEventListener('click',()=>{
+      selected={top:[],heart:[],base:[]};
+      r.notes.forEach(id=>{
+        const n=getNote(id);
+        selected[n.group].push(id);
+      });
+      document.getElementById('perfumeName').value=r.name+' — моя версия';
+      updatePreview();
+      switchPage('lab');
+      showToast('Выбраны ноты понравившегося аромата!');
+    });
+    card.appendChild(btn);
+    grid.appendChild(card);
+  });
+});
+function switchPage(page) {
+  ['lab','discover','collection'].forEach(p=>{
+    document.getElementById(p+'Page').classList.toggle('hidden',p!==page);
+  });
+  document.querySelectorAll('nav button').forEach(b=>
+    b.classList.toggle('active',b.dataset.page===page)
+  );
+  if(page==='collection') renderCollection();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('nav button').forEach(btn=>
+  btn.addEventListener('click',()=>switchPage(btn.dataset.page))
+);
+let toastTimer;
+function showToast(message) {
+  const toast=document.getElementById('toast');
+  toast.textContent=message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>toast.classList.remove('show'),2400);
+}
+renderNotes();
+updatePreview();
+renderCollection();
+</script>
+</body>
+</html>
